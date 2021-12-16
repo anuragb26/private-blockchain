@@ -67,9 +67,9 @@ class Blockchain {
         if (self.height !== -1) {
           block.previousBlockHash = self.chain[self.chain.length - 1].hash
         }
-        block.hash = SHA256(JSON.stringify(block)).toString()
         block.time = new Date().getTime().toString()
         block.height = self.height + 1
+        block.hash = SHA256(JSON.stringify(block)).toString()
         const errors = await self.validateChain()
         if (!errors.length) {
           self.chain.push(block)
@@ -78,7 +78,7 @@ class Blockchain {
         } else {
           reject({ error: errors })
         }
-      } catch ({ error }) {
+      } catch (error) {
         reject({ error })
       }
     })
