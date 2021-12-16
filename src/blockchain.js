@@ -122,10 +122,14 @@ class Blockchain {
         const messageTime = parseInt(message.split(':')[1])
         let currentTime = parseInt(new Date().getTime().toString().slice(0, -3))
         if (currentTime - messageTime < 300) {
-          bitcoinMessage.verify(message, address, signature)
-          const block = new BlockClass.Block({ star, address })
-          await self._addBlock(block)
-          resolve(block)
+          const isValid = bitcoinMessage.verify(message, address, signature)
+          if (!isValid) {
+            reject({ error: 'Invalid signature' })
+          } else {
+            const block = new BlockClass.Block({ star, address })
+            await self._addBlock(block)
+            resolve(block)
+          }
         } else {
           reject({ error: 'Elapsed 5 min Time interval for star submission' })
         }
